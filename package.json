@@ -1,0 +1,20 @@
+{
+  "name": "volocity",
+  "version": "1.0.0",
+  "description": "Volunteering made awesome.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loganford/volocity.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/loganford/volocity/issues"
+  },
+  "homepage": "https://github.com/loganford/volocity#readme"
+}
