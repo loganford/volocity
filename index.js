@@ -1,6 +1,15 @@
 var http = require('http')
+var fs = require('fs')
 
-http.createServer(function(request, response) {
-	response.writeHead(200, {"Content-Type": "text/plain"})
-	response.end("Hey Charis.\n")
-}).listen(process.env.PORT)
+var express = require('express')
+var app = express()
+
+app.use('/untpa', express.static(__dirname + '/public'));
+
+app.get('/', function (req, res) {
+  res.redirect('/untpa')
+})
+
+app.listen(3000, function () {
+  console.log('Example app listening on port 3000!')
+})
