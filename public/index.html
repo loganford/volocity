@@ -28,20 +28,20 @@
 		<div class="container" ng-controller="volocityController as vc">
 			<section class="content bgcolor-4">
 				<h1>UNTHSC PA Volunteers Scheduler</h1>
-				<h4>Please enter the passcode and your email</h4>
-				<span class="input input--kuro">
-					<input class="input__field input__field--kuro" type="text" id="input-8" />
+				<h4>{{vc.instruction}}</h4>
+				<span class="input input--kuro" ng-show="vc.page==0">
+					<input class="input__field input__field--kuro" type="text" id="input-8" ng-model="vc.passcode" />
 					<label class="input__label input__label--kuro" for="input-8">
 						<span class="input__label-content input__label-content--kuro">Passcode</span>
 					</label>
 				</span>
-				<span class="input input--kuro">
-					<input class="input__field input__field--kuro" type="text" id="input-19" />
+				<span class="input input--kuro" ng-show="vc.page==0">
+					<input class="input__field input__field--kuro" type="text" id="input-19" ng-model="vc.email" />
 					<label class="input__label input__label--kuro" for="input-19">
 						<span class="input__label-content input__label-content--kuro">Email</span>
 					</label>
 				</span>
-				<div class="col-sm-12">
+				<div class="col-sm-12" ng-show="vc.page==1">
 			        <div class="checkbox" ng-repeat="event in vc.events">
 			            <label style="font-size: 2.5em">
 			                <input type="checkbox" value=""><span class="cr"><i class="cr-icon fa fa-check"></i></span>
@@ -51,12 +51,11 @@
 		    	</div>
 			</section>
 			<section class="content bgcolor-4">
-				<button class="button" style="vertical-align:middle"><span ng-click="vc.printDate()">Enter</span></button>
+				<button class="button" style="vertical-align:middle" ng-click="vc.enter()"><span>{{vc.buttonText}}</span></button>
 			</section>
 		</div><!-- /container -->
 		<script src="js/classie.js"></script>
 
-		<script src="js/nav.js"></script>
 		<script>
 			(function() {
 				// trim polyfill : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
