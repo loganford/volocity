@@ -4,10 +4,10 @@ var fs = require('fs')
 var express = require('express')
 var app = express()
 
-app.use('/untpa', express.static(__dirname + '/public'));
+app.use('/unthscpa', express.static(__dirname + '/public'));
 
 app.get('/', function (req, res) {
-  res.redirect('/untpa')
+  res.redirect('/unthscpa')
 })
 
 app.listen(process.env.PORT || 3000, function () {

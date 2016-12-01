@@ -1,6 +1,3 @@
-var volunteer = require('./volunteer');
-volunteer.howdy();
-
 // Import events module
 var events = require('events');
 
