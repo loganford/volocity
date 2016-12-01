@@ -1,3 +1,5 @@
+//A test of the event emitter
+
 // Import events module
 var events = require('events');
 

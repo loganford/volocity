@@ -1,5 +1,5 @@
-angular.module('volocityApp', [])
-	.controller('volocityController', function() {
+angular.module('volocityApp', ['angularMoment'])
+	.controller('volocityController', ['moment', function(moment) {
 		var volocity = this;
 		volocity.instruction = "Please enter your e-mail and the passcode:";
 		volocity.page = 0;
@@ -18,8 +18,9 @@ angular.module('volocityApp', [])
 				volocity.page = 1;
 				volocity.instruction = "Select which dates you are available to volunteer!";
 				volocity.buttonText = "Submit";
+				console.log(moment())
 			} else {
 				alert("Incorrect you diabetic.")
 			}
 		}
-	});
+	}]);
