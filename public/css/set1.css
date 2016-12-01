@@ -34,7 +34,7 @@
 	width: 40%;
 	color: #6a7989;
 	font-weight: bold;
-	font-size: 70.25%;
+	font-size: 100%;
 	-webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 	-webkit-touch-callout: none;
@@ -48,7 +48,7 @@
 .input__label-content {
 	position: relative;
 	display: block;
-	padding: 1.6em 0;
+	padding: 1.2em 0;
 	width: 100%;
 }
 
