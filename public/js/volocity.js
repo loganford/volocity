@@ -1,26 +1,28 @@
 angular.module('volocityApp', ['angularMoment'])
-	.controller('volocityController', ['moment', function(moment) {
+	.factory('_', ['$window',
+		function($window) {
+			return $window._;
+		}
+	])
+	.controller('volocityController', ['moment', '_', '$http', function(moment, _, $http) {
 		var volocity = this;
 		volocity.instruction = "Please enter your e-mail and the passcode:";
 		volocity.page = 0;
 		volocity.buttonText = "Enter";
 
-		volocity.events = [
-			"January 30", "February 17", "March 3", "April 10"
-		]
-		volocity.printDate = function() {
-			var date = "20170128";
-			console.log(date);
-		}
 		volocity.enter = function() {
 			//Auth demo
-			if(volocity.passcode == "PAVOLS2016") {
-				volocity.page = 1;
-				volocity.instruction = "Select which dates you are available to volunteer!";
-				volocity.buttonText = "Submit";
-				console.log(moment())
-			} else {
-				alert("Incorrect you diabetic.")
-			}
+			volocity.email = _.toLower(volocity.email);
+			$http({
+				method: 'GET',
+				url: '/vol/' + volocity.email + '/' + volocity.passcode,
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(function(resp){
+				console.log(resp.data);
+			}, function(err){
+				console.log(err);
+			})
 		}
 	}]);

@@ -13,7 +13,7 @@
 		<script src="js/volocity.js"></script>
 		<script src="/bower_components/moment/moment.js"></script>
 		<script src="/bower_components/angular-moment/angular-moment.min.js"></script>
-		<script src="/bower_components/angular-socket-io/socket.min.js"></script>
+		<script src="/bower_components/lodash/lodash.js"></script>
 		<link rel="stylesheet" type="text/css" href="css/normalize.css" />
 		<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/demo.css" />
@@ -46,7 +46,7 @@
 				<div class="col-sm-12" ng-show="vc.page==1">
 			        <div class="checkbox" ng-repeat="event in vc.events">
 			            <label style="font-size: 2em">
-			                <input type="checkbox" value=""><span class="cr"><i class="cr-icon fa fa-check"></i></span>
+			                <input type="checkbox" value="" checked=""><span class="cr"><i class="cr-icon fa fa-check"></i></span>
 			                {{event}}
 			            </label>
 			        </div>
