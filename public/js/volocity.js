@@ -73,11 +73,7 @@ angular.module('volocityApp', ['angularMoment'])
 					vol: vc.vol
 				}
 			}).then(function (resp) {
-				if (resp.data == "") {
-					//User doesn't exist
-				} else {
-					console.log(resp);
-				}
+				console.log(resp);
 			}, function (err) {
 				console.log(err);
 			});
