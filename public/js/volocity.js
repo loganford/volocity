@@ -24,31 +24,26 @@ angular.module('volocityApp', ['angularMoment'])
 						'Content-Type': 'application/json'
 					}
 				}).then(function (resp) {
-					console.log(resp.data);
-					if (resp.data == "") {
-						//User doesn't exist
-					} else {
-						vc.page = 1;
-						vc.instruction = "Please select dates you are available to volunteer!";
-						vc.buttonText = "Submit";
-						vc.org = resp.data.org;
-						vc.vol = resp.data.vol;
-						// Iterate through the organization's events; generate checkboxes
-						_.forEach(vc.org.events, function(event) {
-							var c = {};
-							c.date = event.date;
-							c.formattedDate = moment(c.date).format('MMMM Do');
-							if (_.find(vc.vol.datesAvailable,
-									function (d) {return d == event.date}) !== undefined) {
-								c.checked = true;
-							} else {
-								c.checked = false;
-							}
-							vc.checkboxes.push(c);
-						});
-					}
+					vc.page = 1;
+					vc.err = 0;
+					vc.instruction = "Please select dates you are available to volunteer!";
+					vc.buttonText = "Submit";
+					vc.org = resp.data.org;
+					vc.vol = resp.data.vol;
+					// Iterate through the organization's events; generate checkboxes
+					_.forEach(vc.org.events, function(event) {
+						var c = {};
+						c.date = event.date;
+						c.formattedDate = moment(c.date).format('MMMM Do');
+						if (_.find(vc.vol.datesAvailable,
+								function (d) {return d == event.date}) !== undefined) {
+							c.checked = true;
+						} else {
+							c.checked = false;
+						}
+						vc.checkboxes.push(c);
+					});
 				}, function (err) {
-					console.log(err.status);
 					vc.err = err.status;
 				});
 			}

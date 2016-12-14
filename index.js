@@ -77,7 +77,6 @@ app.get('/vol/:email/:passcode', function(req, res) {
                             else if (vol[0] === undefined) {
                                 res.sendStatus(403);
                             } else {
-                                console.log('2 ' + vol[0]);
                                 response.vol = vol[0];
                                 res.send(response);
                             }
