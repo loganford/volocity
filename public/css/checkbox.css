@@ -5,6 +5,14 @@
     clear: both;
 }
 
+.checkbox {
+    text-align: left;
+}
+
+#checkbox-column {
+    display: inline-table;
+}
+
 .checkbox .cr,
 .radio .cr {
     position: relative;

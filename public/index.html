@@ -50,8 +50,8 @@
 						<span class="input__label-content input__label-content--kuro">Email</span>
 					</label>
 				</span>
-				<div class="col-sm-12" ng-show="vc.page==1" style="display: inline-table" ng-cloak>
-			        <div class="checkbox" ng-repeat="c in vc.checkboxes" style="text-align: left">
+				<div class="col-sm-12" ng-show="vc.page==1" id="checkbox-column" ng-cloak>
+			        <div class="checkbox" ng-repeat="c in vc.checkboxes">
 			            <label style="font-size: 2em">
 			                <input type="checkbox" ng-model="c.checked"><span class="cr" style="color: #118442"><i class="cr-icon fa fa-check"></i></span>
 			                {{c.formattedDate}}
