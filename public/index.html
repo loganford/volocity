@@ -32,25 +32,25 @@
 			<section class="content bgcolor-4">
 				<h1>UNTHSC PA Volunteers Scheduler</h1>
 				<h4>{{vc.instruction}}</h4>
-				<div class="alert alert-danger" ng-show="vc.err == 403" style="color: red">
+				<div class="alert alert-danger" ng-show="vc.err == 403" style="color: red" ng-cloak>
 					<strong>Not Found!</strong> Please check your email and try again.
 				</div>
-				<div class="alert alert-danger" ng-show="vc.err == 401" style="color: red">
+				<div class="alert alert-danger" ng-show="vc.err == 401" style="color: red" ng-cloak>
 					<strong>Unauthorized!</strong> Please check your passcode and try again.
 				</div>
-				<span class="input input--kuro" ng-show="vc.page==0">
+				<span class="input input--kuro" ng-show="vc.page==0" ng-cloak>
 					<input class="input__field input__field--kuro" type="text" id="input-8" ng-model="vc.passcode" />
 					<label class="input__label input__label--kuro" for="input-8">
 						<span class="input__label-content input__label-content--kuro">Passcode</span>
 					</label>
 				</span>
-				<span class="input input--kuro" ng-show="vc.page==0">
+				<span class="input input--kuro" ng-show="vc.page==0" ng-cloak>
 					<input class="input__field input__field--kuro" type="text" id="input-19" ng-model="vc.email" />
 					<label class="input__label input__label--kuro" for="input-19">
 						<span class="input__label-content input__label-content--kuro">Email</span>
 					</label>
 				</span>
-				<div class="col-sm-12" ng-show="vc.page==1" style="display: inline-table">
+				<div class="col-sm-12" ng-show="vc.page==1" style="display: inline-table" ng-cloak>
 			        <div class="checkbox" ng-repeat="c in vc.checkboxes" style="text-align: left">
 			            <label style="font-size: 2em">
 			                <input type="checkbox" ng-model="c.checked"><span class="cr"><i class="cr-icon fa fa-check"></i></span>
