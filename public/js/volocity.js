@@ -11,6 +11,7 @@ angular.module('volocityApp', ['angularMoment'])
 		vc.buttonText = "Enter";
 		vc.checkboxes = [];
 		vc.checkMe = true;
+		vc.err = 0;
 		vc.enter = function() {
 			vc.email = _.toLower(vc.email);
 			if (vc.page == 1){
@@ -23,6 +24,7 @@ angular.module('volocityApp', ['angularMoment'])
 						'Content-Type': 'application/json'
 					}
 				}).then(function (resp) {
+					console.log(resp.data);
 					if (resp.data == "") {
 						//User doesn't exist
 					} else {
@@ -46,7 +48,8 @@ angular.module('volocityApp', ['angularMoment'])
 						});
 					}
 				}, function (err) {
-					console.log(err);
+					console.log(err.status);
+					vc.err = err.status;
 				});
 			}
 		}
@@ -66,7 +69,7 @@ angular.module('volocityApp', ['angularMoment'])
 			});
 			$http({
 				method: 'PUT',
-				url: '/vol/' + vc.email + '/' + vc.passcode,
+				url: '/vol/' + vc.passcode,
 				headers: {
 					'Content-Type': 'application/json'
 				},
