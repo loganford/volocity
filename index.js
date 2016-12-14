@@ -23,41 +23,29 @@ var volunteerSchema = new mongoose.Schema({
   datesAvailable: Array,
 });
 
+//DB Schema - Organization
 var organizationSchema = new mongoose.Schema({
     name: String,
     email: String,
+    events: Array
+});
+
+var authSchema = new mongoose.Schema({
+    organization: String,
     passcode: {
         salt: String,
         hash: String
     }
-})
-
-//DB Schema - Event
-var eventSchema = new mongoose.Schema({
-  date: Date,
-  availableVols: Array
 });
 
 // Create a model based on the schema
 var Volunteer = mongoose.model('Volunteer', volunteerSchema);
-var Event = mongoose.model('Event', eventSchema);
 var Organization = mongoose.model('Organization', organizationSchema);
-
-// var mySalt = csprng(64,36);
-// var myHash = sha3_256(mySalt + 'PAVOLS2017');
-// var unthscpa = new Organization({name: 'UNTHSCPA', email: 'loganford17@gmail.com', passcode: {hash: myHash, salt: mySalt}})
-//
-//
-// unthscpa.save(function(err){
-//     if(err)
-//         console.log(err);
-//     else
-//         console.log(unthscpa);
-// });
+var Auth = mongoose.model('Auth', authSchema);
 
 //Initialize App
 app.listen(process.env.PORT || 3000, function () {
-    console.log("App is now live!");
+    console.log("App is live!");
 });
 
 //Endpoints
@@ -66,22 +54,39 @@ app.get('/', function (req, res) {
 });
 
 app.get('/vol/:email/:passcode', function(req, res) {
-    console.log('GET Vol Received');
-    console.log(req.params);
     var hash, salt;
-    Organization.find({name: 'UNTHSCPA'}, function(err, org){
-        if (err) { res.send(err); }
+    var response = {};
+    // Retrieve auth credentials for organization
+    Auth.find({organization: 'UNTHSCPA'}, function(err, auth){
+        if (err) {res.send(err); }
         else {
-            hash = org[0].passcode.hash;
-            salt = org[0].passcode.salt;
+            hash = auth[0].passcode.hash;
+            salt = auth[0].passcode.salt;
             if(sha3_256(salt + req.params.passcode) == hash) {
-                Volunteer.find({email: req.params.email}, function(err, vol){
+                // If authorized, retrieve organization data
+                Organization.find({name: 'UNTHSCPA'}, function(err, org){
                     if (err) { res.send(err); }
-                    else { res.send(vol); }
+                    else {
+                        // Append organization to response
+                        response.org = org[0];
+                        // Retrieve volunteer
+                        Volunteer.find({email: req.params.email}, function(err, vol){
+                            if (err) { res.send(err); }
+                            else {
+                                response.vol = vol[0];
+                                res.send(response);
+                            }
+                        });
+
+                    }
                 });
             } else {
-                res.send('FAIL');
+                res.send('UNAUTHORIZED');
             }
         }
+    });
+
+    app.put('/vol/:email/:passcode', function(req, res) {
+       console.log(req.body);
     });
 });

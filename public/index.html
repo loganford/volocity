@@ -9,6 +9,7 @@
 		<meta name="keywords" content="input, text, effect, focus, transition, interaction, inspiration, web design" />
 		<meta name="author" content="Codrops" />
 		<link rel="shortcut icon" href="../favicon.ico">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular.min.js"></script>
 		<script src="js/volocity.js"></script>
 		<script src="/bower_components/moment/moment.js"></script>
@@ -43,11 +44,11 @@
 						<span class="input__label-content input__label-content--kuro">Email</span>
 					</label>
 				</span>
-				<div class="col-sm-12" ng-show="vc.page==1">
-			        <div class="checkbox" ng-repeat="event in vc.events">
+				<div class="col-sm-12" ng-show="vc.page==1" style="display: inline-table">
+			        <div class="checkbox" ng-repeat="c in vc.checkboxes" style="text-align: left">
 			            <label style="font-size: 2em">
-			                <input type="checkbox" value="" checked=""><span class="cr"><i class="cr-icon fa fa-check"></i></span>
-			                {{event}}
+			                <input type="checkbox" ng-model="c.checked"><span class="cr"><i class="cr-icon fa fa-check"></i></span>
+			                {{c.formattedDate}}
 			            </label>
 			        </div>
 		    	</div>
