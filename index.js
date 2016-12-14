@@ -108,7 +108,7 @@ app.get('/vol/:email/:passcode', function(req, res) {
                             Organization.update({name: org.name}, {events: org.events}, function(err){
                                 if(err) {res.send(err)}
                                 else {
-                                    res.send('SUCCESSFULLY UPDATED');
+                                    res.send('Successfully updated.');
                                 }
                             });
                         }
