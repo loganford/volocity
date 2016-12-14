@@ -66,13 +66,18 @@ app.get('/vol/:email/:passcode', function(req, res) {
                 // If authorized, retrieve organization data
                 Organization.find({name: 'UNTHSCPA'}, function(err, org){
                     if (err) { res.send(err); }
-                    else {
+                    else if (org[0] === undefined) {
+                        res.status(403);
+                    } else {
                         // Append organization to response
                         response.org = org[0];
                         // Retrieve volunteer
                         Volunteer.find({email: req.params.email}, function(err, vol){
                             if (err) { res.send(err); }
-                            else {
+                            else if (vol[0] === undefined) {
+                                res.sendStatus(403);
+                            } else {
+                                console.log('2 ' + vol[0]);
                                 response.vol = vol[0];
                                 res.send(response);
                             }
@@ -81,12 +86,39 @@ app.get('/vol/:email/:passcode', function(req, res) {
                     }
                 });
             } else {
-                res.send('UNAUTHORIZED');
+                res.sendStatus(401);
             }
         }
     });
 
-    app.put('/vol/:email/:passcode', function(req, res) {
-       console.log(req.body);
+    app.put('/vol/:passcode', function(req, res) {
+        var vol = req.body.vol;
+        var org = req.body.org;
+        // Retrieve auth credentials for organization
+        Auth.find({organization: org.name}, function(err, auth) {
+            if (err) {res.send(err);}
+            else {
+                hash = auth[0].passcode.hash;
+                salt = auth[0].passcode.salt;
+                if(sha3_256(salt + req.params.passcode) == hash) {
+                    // If authorized, updated Volunteer
+                    Volunteer.update({email: vol.email}, {datesAvailable: vol.datesAvailable}, function(err){
+                        if(err) {res.send(err)}
+                        else {
+                            // If successful, update Organization
+                            Organization.update({name: org.name}, {events: org.events}, function(err){
+                                if(err) {res.send(err)}
+                                else {
+                                    res.send('SUCCESSFULLY UPDATED');
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    res.sendStatus(401);
+                }
+            }
+        })
+
     });
 });
