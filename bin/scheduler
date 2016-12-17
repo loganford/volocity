@@ -5,8 +5,8 @@ var nodemailer = require('nodemailer');
 var transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
-        user: 'loganford17@gmail.com', // Your email id
-        pass: 'samgamgee' // Your password
+        user: 'volocity.scheduler@gmail.com', // Your email id
+        pass: '3hZa7LNRufdZ9Qy' // Your password
     }
 });
 
