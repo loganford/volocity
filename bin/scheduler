@@ -1,33 +1,6 @@
 #!/usr/bin/env node
 
 var nodemailer = require('nodemailer');
-var mongodb = require('mongodb');
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-
-//DB Connection
-mongoose.connect('mongodb://heroku_f913h3ph:e91uvbodmgahapl69rmthff1pg@ds119788.mlab.com:19788/heroku_f913h3ph');
-
-//DB Schema - Volunteer
-var volunteerSchema = new mongoose.Schema({
-    email: String,
-    datesAvailable: Array,
-});
-
-//DB Schema - Organization
-var organizationSchema = new mongoose.Schema({
-    name: String,
-    email: String,
-    events: Array
-});
-
-// Create a model based on the schema
-var Volunteer = mongoose.model('Volunteer', volunteerSchema);
-var Organization = mongoose.model('Organization', organizationSchema);
 
 var transporter = nodemailer.createTransport({
     service: 'Gmail',
@@ -37,12 +10,11 @@ var transporter = nodemailer.createTransport({
     }
 });
 
-
 var mailOptions = {
     from: 'loganford17@gmail.com', // sender address
     to: 'loganford17@gmail.com', // list of receivers
     subject: 'Howdy', // Subject line
-    text: text //, // plaintext body
+    text: 'Howdy Ags' //, // plaintext body
     // html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
 };
 
