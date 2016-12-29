@@ -19,15 +19,18 @@ mongoose.connect('mongodb://heroku_f913h3ph:e91uvbodmgahapl69rmthff1pg@ds119788.
 
 //DB Schema - Volunteer
 var volunteerSchema = new mongoose.Schema({
-  email: String,
-  datesAvailable: Array,
+    email: String,
+    organization: String,
+    cooldown: 0,
+    datesAvailable: Array
 });
 
 //DB Schema - Organization
 var organizationSchema = new mongoose.Schema({
     name: String,
-    email: String,
-    events: Array
+    admin: String,
+    events: Array,
+    volunteers: Array
 });
 
 var authSchema = new mongoose.Schema({
