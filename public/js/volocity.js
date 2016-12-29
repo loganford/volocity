@@ -32,16 +32,20 @@ angular.module('volocityApp', ['angularMoment'])
 					vc.vol = resp.data.vol;
 					// Iterate through the organization's events; generate checkboxes
 					_.forEach(vc.org.events, function(event) {
-						var c = {};
-						c.date = event.date;
-						c.formattedDate = moment(c.date).format('MMMM Do');
-						if (_.find(vc.vol.datesAvailable,
-								function (d) {return d == event.date}) !== undefined) {
-							c.checked = true;
-						} else {
-							c.checked = false;
+						if (event.assignedVols === undefined) {
+							var c = {};
+							c.date = event.date;
+							c.formattedDate = moment(c.date).format('MMMM Do');
+							if (_.find(vc.vol.datesAvailable,
+									function (d) {
+										return d == event.date
+									}) !== undefined) {
+								c.checked = true;
+							} else {
+								c.checked = false;
+							}
+							vc.checkboxes.push(c);
 						}
-						vc.checkboxes.push(c);
 					});
 				}, function (err) {
 					vc.err = err.status;
