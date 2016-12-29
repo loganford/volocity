@@ -78,7 +78,16 @@ app.get('/vol/:email/:passcode', function(req, res) {
                         Volunteer.find({email: req.params.email}, function(err, vol){
                             if (err) { res.send(err); }
                             else if (vol[0] === undefined) {
-                                res.sendStatus(403);
+                                var newVol = new Volunteer({email: req.params.email,  organization: response.org.name,
+                                cooldown: 0, datesAvailable: []})
+                                newVol.save(function(err){
+                                    if (err) {console.log(err);}
+                                    else {
+                                        response.vol = newVol;
+                                        console.log('New Volunteer was added to ' + response.org.name +': ' + newVol);
+                                        res.send(response);
+                                    }
+                                });
                             } else {
                                 response.vol = vol[0];
                                 res.send(response);
