@@ -18,6 +18,7 @@ module.exports = function(app) {
         res.redirect('/');
     });
 
+    // GET Volunteer
     app.get('/vol/:email/:passcode', function(req, res) {
         var hash, salt;
         var response = {};
@@ -52,6 +53,11 @@ module.exports = function(app) {
                                     });
                                 } else {
                                     response.vol = vol[0];
+                                    if (response.vol.email == response.org.admin) {
+                                        response.admin = true;
+                                    } else {
+                                        response.admin = false;
+                                    }
                                     res.send(response);
                                 }
                             });
@@ -64,6 +70,7 @@ module.exports = function(app) {
             }
         });
 
+        // PUT Volunteer
         app.put('/vol/:passcode', function(req, res) {
             var vol = req.body.vol;
             var org = req.body.org;

@@ -13,8 +13,8 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
         })
 
         .when('/admin', {
-            templateUrl: 'views/registration.html',
-            controller: 'registrationController as rc'
+            templateUrl: 'views/admin.html',
+            controller: 'adminController as ac'
         });
 
     $locationProvider.html5Mode(true);

@@ -24,7 +24,11 @@ function loginController(_, loginService, $scope, $location) {
             $scope.$parent.org = resp.data.org;
             $scope.$parent.vol = resp.data.vol;
             lc.working = false;
-            $location.path('/register');
+            if (resp.data.admin) {
+                $location.path('/admin');
+            } else {
+                $location.path('/register');
+            }
         }, function (err) {
             lc.working = false;
             lc.err = err.status;
