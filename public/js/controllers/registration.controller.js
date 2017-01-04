@@ -34,7 +34,6 @@ function registrationController(moment, _, registrationService, $scope, $locatio
     });
 
     rc.submit = function () {
-        rc.working = true;
         rc.vol.datesAvailable = [];
         _.forEach(rc.checkboxes, function (c) {
             var i = _.findIndex(rc.org.events, function (e) {
@@ -52,14 +51,12 @@ function registrationController(moment, _, registrationService, $scope, $locatio
             }
         });
         registrationService.update(rc.passcode, rc.org, rc.vol).then(function (resp) {
-            rc.working = false;
             rc.successful = true;
             rc.err = 0;
             console.log(resp);
             $location.hash('top');
             $anchorScroll();
         }, function (err) {
-            rc.working = false;
             rc.err = err.status;
             console.log(err);
             $location.hash('top');
