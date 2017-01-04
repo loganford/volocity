@@ -2947,7 +2947,7 @@ this.isSystemPage = function(win)
         if (!doc)
             return false;
 
-        // Detect pages for pretty printed XML
+        // Detect views for pretty printed XML
         if ((doc.styleSheets.length && doc.styleSheets[0].href
                 == "chrome://global/content/xml/XMLPrettyPrint.css")
             || (doc.styleSheets.length > 1 && doc.styleSheets[1].href
@@ -6652,7 +6652,7 @@ Firebug.Module = extend(new Firebug.Listener(),
     },
 
     /**
-     * Called when a context is destroyed. Module may store info on persistedState for reloaded pages.
+     * Called when a context is destroyed. Module may store info on persistedState for reloaded views.
      */
     destroyContext: function(context, persistedState)
     {
@@ -9661,7 +9661,7 @@ var createChromeWindow = function(options)
         if (/access/i.test(msg))
         {
             // Firebug Lite could not create a window for its Graphical User Interface due to
-            // a access restriction. This happens in some pages, when loading via bookmarklet.
+            // a access restriction. This happens in some views, when loading via bookmarklet.
             // In such cases, the only way is to load the GUI in a "windowless mode".
 
             if (isChromeFrame)

@@ -1,0 +1,31 @@
+{
+  "name": "spinthatshit",
+  "homepage": "https://github.com/MatejKustec/SpinThatShit",
+  "version": "1.0.3",
+  "authors": [
+    "Matej Kustec"
+  ],
+  "description": "A set of SCSS mixins for single element loaders and spinners",
+  "main": "src/loaders.scss",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "spinthatshit",
+    "css",
+    "loaders",
+    "spinners",
+    "scss",
+    "sass"
+  ],
+  "license": "MIT",
+  "_release": "1.0.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.3",
+    "commit": "fcf1e5f666e1ff7468037609ee22c38a19b70540"
+  },
+  "_source": "https://github.com/MatejKustec/SpinThatShit.git",
+  "_target": "*",
+  "_originalSource": "SpinThatShit"
+}

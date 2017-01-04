@@ -1,0 +1,19 @@
+<div class="alert alert-danger" ng-show="rc.err != 0" style="color: red" ng-cloak>
+    <strong>Something went wrong!</strong> Please check your connection and try again.
+</div>
+<div class="alert alert-success" ng-show="rc.successful" style="color: #118442" ng-cloak>
+    <strong>Success!</strong> Your changes have been saved. You can close this page. Thank you!
+</div>
+<br>
+<div class="col-sm-12" id="checkbox-column" ng-cloak>
+    <div class="checkbox" ng-repeat="c in rc.checkboxes">
+        <label style="font-size: 1.6em">
+            <input type="checkbox" ng-model="c.checked"><span class="cr" style="color: #118442"><i class="cr-icon fa fa-check"></i></span>
+            {{c.formattedDate}}
+        </label>
+    </div>
+</div>
+<div class="loader03" ng-show="rc.working"></div>
+<section class="content bgcolor-4">
+    <a class="button" ng-click="rc.submit()" ng-cloak>{{rc.buttonText}}</a>
+</section>

@@ -2,6 +2,7 @@
 <html lang="en" ng-app="volocityApp">
 	<head>
 		<meta charset="UTF-8" />
+		<base href="/">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Volocity: UNTHSC PA</title>
@@ -11,10 +12,20 @@
 		<link rel="shortcut icon" href="../favicon.ico">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular.min.js"></script>
-		<script src="js/volocity.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
 		<script src="/bower_components/moment/moment.js"></script>
 		<script src="/bower_components/angular-moment/angular-moment.min.js"></script>
 		<script src="/bower_components/lodash/lodash.js"></script>
+		<link rel="stylesheet" type="text/css" href="/bower_components/SpinThatShit/examples/style.css" />
+
+		<!--ANGULAR MATERIAL-->
+		<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+		<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+		<!--CSS-->
 		<link rel="stylesheet" type="text/css" href="css/normalize.css" />
 		<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/demo.css" />
@@ -23,82 +34,30 @@
 		<link rel="stylesheet" type="text/css" href="css/checkbox.css" />
 		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
+		<!--ANGULAR CUSTOM-->
+		<script src="js/controllers/main.controller.js"></script>
+		<script src="js/controllers/admin.controller.js"></script>
+		<script src="js/controllers/login.controller.js"></script>
+		<script src="js/controllers/registration.controller.js"></script>
+		<script src="js/services/admin.service.js"></script>
+		<script src="js/services/login.service.js"></script>
+		<script src="js/services/registration.service.js"></script>
+		<script src="js/appRoutes.js"></script>
+		<script src="js/app.js"></script>
+
+		<script src="js/classie.js"></script>
+
 		<!--[if IE]>
   		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 	</head>
-	<body>
-		<div class="container" ng-controller="volocityController as vc">
+	<body ng-controller="mainController as mc" id="top">
+		<div class="container">
 			<section class="content bgcolor-4">
 				<h1>UNTHSC PA Volunteers Scheduler</h1>
-				<h4>{{vc.instruction}}</h4>
-				<div class="alert alert-danger" ng-show="vc.err == 403" style="color: red" ng-cloak>
-					<strong>Not Found!</strong> Please make sure your email is correct and try again.
-				</div>
-				<div class="alert alert-danger" ng-show="vc.err == 401" style="color: red" ng-cloak>
-					<strong>Unauthorized!</strong> Please make sure your passcode is correct and try again.
-				</div>
-				<span class="input input--kuro" ng-show="vc.page==0" ng-cloak>
-					<input class="input__field input__field--kuro" type="text" id="input-8" ng-model="vc.passcode" />
-					<label class="input__label input__label--kuro" for="input-8">
-						<span class="input__label-content input__label-content--kuro">Passcode</span>
-					</label>
-				</span>
-				<span class="input input--kuro" ng-show="vc.page==0" ng-cloak>
-					<input class="input__field input__field--kuro" type="text" id="input-19" ng-model="vc.email" />
-					<label class="input__label input__label--kuro" for="input-19">
-						<span class="input__label-content input__label-content--kuro">Email</span>
-					</label>
-				</span>
-				<div class="col-sm-12" ng-show="vc.page==1" id="checkbox-column" ng-cloak>
-			        <div class="checkbox" ng-repeat="c in vc.checkboxes">
-			            <label style="font-size: 1.6em">
-			                <input type="checkbox" ng-model="c.checked"><span class="cr" style="color: #118442"><i class="cr-icon fa fa-check"></i></span>
-			                {{c.formattedDate}}
-			            </label>
-			        </div>
-		    	</div>
-			</section>
-			<section class="content bgcolor-4">
-				<button class="button" style="vertical-align:middle" ng-click="vc.enter()"><span>{{vc.buttonText}}</span></button>
+				<h4 ng-cloak>{{instruction}}</h4>
+				<div ng-view></div>
 			</section>
 		</div><!-- /container -->
-		<script src="js/classie.js"></script>
-
-		<script>
-			(function() {
-				// trim polyfill : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
-				if (!String.prototype.trim) {
-					(function() {
-						// Make sure we trim BOM and NBSP
-						var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
-						String.prototype.trim = function() {
-							return this.replace(rtrim, '');
-						};
-					})();
-				}
-
-				[].slice.call( document.querySelectorAll( 'input.input__field' ) ).forEach( function( inputEl ) {
-					// in case the input is already filled..
-					if( inputEl.value.trim() !== '' ) {
-						classie.add( inputEl.parentNode, 'input--filled' );
-					}
-
-					// events:
-					inputEl.addEventListener( 'focus', onInputFocus );
-					inputEl.addEventListener( 'blur', onInputBlur );
-				} );
-
-				function onInputFocus( ev ) {
-					classie.add( ev.target.parentNode, 'input--filled' );
-				}
-
-				function onInputBlur( ev ) {
-					if( ev.target.value.trim() === '' ) {
-						classie.remove( ev.target.parentNode, 'input--filled' );
-					}
-				}
-			})();
-		</script>
 	</body>
 </html>
