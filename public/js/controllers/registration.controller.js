@@ -15,6 +15,7 @@ function registrationController(moment, _, registrationService, $scope, $locatio
     rc.buttonText = 'Submit';
     rc.checkboxes = [];
     rc.err = 0;
+    rc.successful = false;
 // Iterate through the organization's events; generate checkboxes
     _.forEach(rc.org.events, function (event) {
         if (event.assignedVols === undefined) {
@@ -51,16 +52,18 @@ function registrationController(moment, _, registrationService, $scope, $locatio
             }
         });
         registrationService.update(rc.passcode, rc.org, rc.vol).then(function (resp) {
-            rc.successful = true;
-            rc.err = 0;
+            if (resp.status == 200) {
+                rc.successful = true;
+                rc.err = 0;
+                $location.hash('top');
+                $anchorScroll();
+            }
             console.log(resp);
+        }, function (err) {
             $location.hash('top');
             $anchorScroll();
-        }, function (err) {
             rc.err = err.status;
             console.log(err);
-            $location.hash('top');
-            $anchorScroll();
         });
     }
 }
