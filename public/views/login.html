@@ -1,6 +1,10 @@
-<div class="alert alert-danger" ng-show="lc.err != 0" style="color: red" ng-cloak>
+<div ng-show="lc.err == 404" style="color: red" ng-cloak>
     <strong>Not Found!</strong> Please make sure your email and password are correct and try again.
 </div>
+<div ng-show="lc.err == 401" style="color: red" ng-cloak>
+    <strong>Unauthorized!</strong> It looks like your password is invalid. Please try again.
+</div>
+<br>
 <span class="input input--kuro" ng-cloak>
     <input class="input__field input__field--kuro" type="text" id="input-8" ng-model="lc.email" />
     <label class="input__label input__label--kuro" for="input-8">
@@ -8,14 +12,14 @@
     </label>
 </span>
 <span class="input input--kuro" ng-cloak>
-    <input class="input__field input__field--kuro" type="text" id="input-19" ng-model="lc.passcode" />
+    <input class="input__field input__field--kuro" type="text" id="input-19" ng-model="lc.password" />
     <label class="input__label input__label--kuro" for="input-19">
-        <span class="input__label-content input__label-content--kuro">Passcode</span>
+        <span class="input__label-content input__label-content--kuro">Password</span>
     </label>
 </span>
 <div class="loader03" ng-show="lc.working"></div>
-<section class="content bgcolor-4">
-    <a class="button" ng-click="lc.enter()" ng-cloak>{{lc.buttonText}}</a>
+<section class="content-volocity bgcolor-4">
+    <a class="button volocity-button" ng-click="lc.enter()" ng-cloak>{{lc.buttonText}}</a>
 </section>
 <script>
     (function() {

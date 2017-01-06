@@ -9,7 +9,7 @@ registrationController.$inject = ['moment', '_', 'registrationService', '$scope'
 function registrationController(moment, _, registrationService, $scope, $location, $anchorScroll) {
     var rc = this;
     rc.email = $scope.$parent.email;
-    rc.passcode = $scope.$parent.passcode;
+    rc.password = $scope.$parent.password;
     rc.org = $scope.$parent.org;
     rc.vol = $scope.$parent.vol;
     rc.buttonText = 'Submit';
@@ -51,7 +51,7 @@ function registrationController(moment, _, registrationService, $scope, $locatio
                 });
             }
         });
-        registrationService.update(rc.passcode, rc.org, rc.vol).then(function (resp) {
+        registrationService.update(rc.password, rc.org, rc.vol).then(function (resp) {
             if (resp.status == 200) {
                 rc.successful = true;
                 rc.err = 0;

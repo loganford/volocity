@@ -4,6 +4,7 @@ var Auth = require('./models/auth');
 var sha3_256 = require('js-sha3').sha3_256;
 var csprng = require('csprng');
 var _ = require('lodash');
+var moment = require('moment');
 
 module.exports = function(app) {
     app.get('/', function (req, res) {
@@ -18,89 +19,246 @@ module.exports = function(app) {
         res.redirect('/');
     });
 
-    // GET Volunteer
-    app.get('/vol/:email/:passcode', function(req, res) {
+    // Get Volunteer or Admin
+    app.get('/vol/:email/:password', function(req, res) {
         var hash, salt;
         var response = {};
         // Retrieve auth credentials for organization
-        Auth.find({organization: 'UNTHSCPA'}, function(err, auth){
-            if (err) {res.send(err); }
-            else {
-                hash = auth[0].passcode.hash;
-                salt = auth[0].passcode.salt;
-                if(sha3_256(salt + req.params.passcode) == hash) {
-                    // If authorized, retrieve organization data
-                    Organization.find({name: 'UNTHSCPA'}, function(err, org){
-                        if (err) { res.send(err); }
-                        else if (org[0] === undefined) {
-                            res.status(403);
-                        } else {
-                            // Append organization to response
-                            response.org = org[0];
-                            // Retrieve volunteer
-                            Volunteer.find({email: req.params.email}, function(err, vol){
-                                if (err) { res.send(err); }
-                                else if (vol[0] === undefined) {
-                                    var newVol = new Volunteer({email: req.params.email,  organization: response.org.name,
-                                        cooldown: 0, datesAvailable: []})
-                                    newVol.save(function(err){
-                                        if (err) {console.log(err);}
-                                        else {
-                                            response.vol = newVol;
-                                            console.log('New Volunteer was added to ' + response.org.name +': ' + newVol);
-                                            res.send(response);
-                                        }
-                                    });
-                                } else {
-                                    response.vol = vol[0];
-                                    if (response.vol.email == response.org.admin) {
-                                        response.admin = true;
+        Organization.find({name: 'UNTHSCPA'}, function(err, org){
+            if (err) { res.send(err); }
+            else if (org[0] === undefined) {
+                res.status(404);
+            } else {
+                response.org = org[0];
+                if(org[0].admin == req.params.email){
+                    Auth.find({organization: 'UNTHSCPA', role: 'Admin'}, function(err, auth) {
+                        if (err) {res.send(err); }
+                        else {
+                            hash = auth[0].password.hash;
+                            salt = auth[0].password.salt;
+                            if(sha3_256(salt + req.params.password) == hash) {
+                                response.admin = true;
+                                Volunteer.find({email: req.params.email}, function(err, vol){
+                                    if (err) { res.send(err); }
+                                    else if (vol[0] === undefined) {
+                                        res.status(404);
                                     } else {
-                                        response.admin = false;
+                                        response.vol = vol[0];
+                                        res.send(response);
                                     }
-                                    res.send(response);
+                                });
+                            } else {
+                                res.sendStatus(401);
+                            }
+                        }
+                    });
+                } else {
+                    Auth.find({organization: 'UNTHSCPA', role: 'Volunteer'}, function(err, auth) {
+                        if (err) {res.send(err); }
+                        else {
+                            hash = auth[0].password.hash;
+                            salt = auth[0].password.salt;
+                            if(sha3_256(salt + req.params.password) == hash) {
+                                Volunteer.find({email: req.params.email}, function(err, vol){
+                                    if (err) { res.send(err); }
+                                    else if (vol[0] === undefined) {
+                                        res.status(404);
+                                    } else {
+                                        response.vol = vol[0];
+                                        res.send(response);
+                                    }
+                                });
+                            } else {
+                                res.status(401);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    });
+
+    // Update Volunteer
+    app.put('/vol/:password', function(req, res) {
+        var vol = req.body.vol;
+        var org = req.body.org;
+        // Retrieve auth credentials for organization
+        Auth.find({organization: org.name}, function(err, auth) {
+            if (err) {res.send(err);}
+            else {
+                hash = auth[0].password.hash;
+                salt = auth[0].password.salt;
+                if(sha3_256(salt + req.params.password) == hash) {
+                    // If authorized, update Volunteer
+                    Volunteer.update({email: vol.email}, {datesAvailable: vol.datesAvailable}, function(err){
+                        if(err) {res.send(err)}
+                        else {
+                            // If successful, update Organization
+                            Organization.update({name: org.name}, {events: org.events}, function(err){
+                                if(err) {res.send(err)}
+                                else {
+                                    res.send('Successfully updated.');
                                 }
                             });
-
                         }
                     });
                 } else {
                     res.sendStatus(401);
                 }
             }
-        });
+        })
 
-        // PUT Volunteer
-        app.put('/vol/:passcode', function(req, res) {
-            var vol = req.body.vol;
-            var org = req.body.org;
-            // Retrieve auth credentials for organization
-            Auth.find({organization: org.name}, function(err, auth) {
-                if (err) {res.send(err);}
-                else {
-                    hash = auth[0].passcode.hash;
-                    salt = auth[0].passcode.salt;
-                    if(sha3_256(salt + req.params.passcode) == hash) {
-                        // If authorized, updated Volunteer
-                        Volunteer.update({email: vol.email}, {datesAvailable: vol.datesAvailable}, function(err){
-                            if(err) {res.send(err)}
-                            else {
-                                // If successful, update Organization
-                                Organization.update({name: org.name}, {events: org.events}, function(err){
-                                    if(err) {res.send(err)}
-                                    else {
-                                        res.send('Successfully updated.');
-                                    }
-                                });
-                            }
-                        });
-                    } else {
-                        res.sendStatus(401);
-                    }
+    });
+
+    // ADMIN - Add New Volunteer
+    app.post('/admin/vol/:password', function(req, res){
+        var newVolEmail = req.body.vol;
+        var orgName = req.body.orgName;
+        Auth.find({organization: orgName, role: 'Admin'}, function(err, auth){
+            if (err) {res.send(err);}
+            else {
+                hash = auth[0].password.hash;
+                salt = auth[0].password.salt;
+                // Check Admin Credentials
+                if(sha3_256(salt + req.params.password) == hash) {
+                    var newVol = new Volunteer({email: newVolEmail,  organization: orgName,
+                        cooldown: 0, datesAvailable: []})
+                    // Save to Volunteer
+                    newVol.save(function(err){
+                        if (err) { res.send(err); }
+                        else {
+                            // Find Organization
+                            Organization.find({name: orgName}, function(err, org){
+                                if (err) { res.send(err); }
+                                else {
+                                    // Add New Volunteer to Organization
+                                    org[0].volunteers.push(newVolEmail);
+                                    // Update Organization
+                                    Organization.update({name: orgName}, {volunteers: org[0].volunteers}, function(err){
+                                        if (err) { res.send(err); }
+                                        else {
+                                            res.send(org);
+                                        }
+                                    })
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    res.sendStatus(401);
                 }
-            })
+            }
+        })
+    });
 
-        });
+    // ADMIN - Remove a Volunteer
+    app.delete('/admin/vol/:password', function(req, res){
+        var volToRemove = req.body.vol;
+        var orgName = req.body.orgName;
+        Auth.find({organization: orgName, role: 'Admin'}, function(err, auth){
+            if (err) {res.send(err);}
+            else {
+                hash = auth[0].password.hash;
+                salt = auth[0].password.salt;
+                // Check Admin Credentials
+                if(sha3_256(salt + req.params.password) == hash) {
+                    Volunteer.remove({email: volToRemove}, function(err){
+                        if (err) { res.send(err); }
+                        else {
+                            // Find Organization
+                            Organization.find({name: orgName}, function(err, org){
+                                if (err) { res.send(err); }
+                                else {
+                                    // Remove Volunteer from Organization
+                                    _.remove(org[0].volunteers, function(v){return v == volToRemove});
+                                    var newEvents = [];
+                                    _.forEach(org[0].events, function(e){
+                                       if (_.includes(e.volsAvailable, volToRemove)) {
+                                           _.remove(e.volsAvailable, volToRemove);
+                                       }
+                                       newEvents.append(e);
+                                    });
+                                    // Update Organization
+                                    Organization.update({name: orgName}, {volunteers: org[0].volunteers, events: newEvents}, function(err){
+                                        if (err) { res.send(err); }
+                                        else {
+                                            res.send(org);
+                                        }
+                                    })
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    res.sendStatus(401);
+                }
+            }
+        })
+    });
+
+    // ADMIN - Add an Event
+    app.post('/admin/event/:password', function(req, res){
+        var newEventDate = moment(req.body.event).format('YYYY-MM-DD');
+        var orgName = req.body.orgName;
+        Auth.find({organization: orgName, role: 'Admin'}, function(err, auth){
+            if (err) {res.send(err);}
+            else {
+                hash = auth[0].password.hash;
+                salt = auth[0].password.salt;
+                // Check Admin Credentials
+                if(sha3_256(salt + req.params.password) == hash) {
+                    Organization.find({name: orgName}, function(err, org){
+                        if (err) { res.send(err); }
+                        else {
+                            // Add Event
+                            var newEvent = {volsAvailable: [], date: newEventDate};
+                            org[0].events.push(newEvent)
+                            // Update Organization
+                            Organization.update({name: orgName}, {events: org[0].events}, function(err){
+                                if (err) { res.send(err); }
+                                else {
+                                    res.send(org);
+                                }
+                            })
+                        }
+                    });
+                } else {
+                    res.sendStatus(401);
+                }
+            }
+        })
+    });
+
+    // ADMIN - Remove an Event
+    app.delete('/admin/event/:password', function(req, res){
+        var eventToRemove = req.body.event;
+        var orgName = req.body.orgName;
+        Auth.find({organization: orgName, role: 'Admin'}, function(err, auth){
+            if (err) {res.send(err);}
+            else {
+                hash = auth[0].password.hash;
+                salt = auth[0].password.salt;
+                // Check Admin Credentials
+                if(sha3_256(salt + req.params.password) == hash) {
+                    Organization.find({name: orgName}, function(err, org){
+                        if (err) { res.send(err); }
+                        else {
+                            // Remove Event from Organization
+                            _.remove(org[0].events, function(e){return e.date == eventToRemove});
+                            // Update Organization
+                            Organization.update({name: orgName}, {events: org[0].events}, function(err){
+                                if (err) { res.send(err); }
+                                else {
+                                    res.send(org);
+                                }
+                            })
+                        }
+                    });
+                } else {
+                    res.sendStatus(401);
+                }
+            }
+        })
     });
 }
 

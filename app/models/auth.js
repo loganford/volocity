@@ -2,7 +2,8 @@ var mongoose = require('mongoose');
 
 module.exports = mongoose.model('Auth', {
     organization : String,
-    passcode: {
+    role: String,
+    password: {
         salt: String,
         hash: String
     }

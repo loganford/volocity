@@ -14,11 +14,11 @@ function loginController(_, loginService, $scope, $location) {
 
     lc.enter = function () {
         lc.email = _.toLower(lc.email);
-        // Pass email and passcode to main controller
+        // Pass email and password to main controller
         $scope.$parent.email = lc.email;
-        $scope.$parent.passcode = lc.passcode;
+        $scope.$parent.password = lc.password;
         lc.working = true;
-        loginService.login(lc.email, lc.passcode).then(function (resp) {
+        loginService.login(lc.email, lc.password).then(function (resp) {
             lc.err = 0;
             $scope.$parent.instruction = "Please select dates you are available to volunteer!";
             $scope.$parent.org = resp.data.org;

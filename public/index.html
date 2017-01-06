@@ -18,13 +18,6 @@
 		<script src="/bower_components/lodash/lodash.js"></script>
 		<link rel="stylesheet" type="text/css" href="/bower_components/SpinThatShit/examples/style.css" />
 
-		<!--ANGULAR MATERIAL-->
-		<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
-		<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
-
 		<!--CSS-->
 		<link rel="stylesheet" type="text/css" href="css/normalize.css" />
 		<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
@@ -33,6 +26,10 @@
 		<link rel="stylesheet" type="text/css" href="css/button.css" />
 		<link rel="stylesheet" type="text/css" href="css/checkbox.css" />
 		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+		<!--BOOTSTRAP-->
+		<script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
 
 		<!--ANGULAR CUSTOM-->
 		<script src="js/controllers/main.controller.js"></script>
@@ -52,10 +49,10 @@
 		<![endif]-->
 	</head>
 	<body ng-controller="mainController as mc" id="top">
-		<div class="container">
-			<section class="content bgcolor-4">
-				<h1>UNTHSC PA Volunteers Scheduler</h1>
-				<h4 ng-cloak>{{instruction}}</h4>
+		<div class="container-volocity">
+			<section class="content-volocity bgcolor-4">
+				<div class="volocity-title">UNTHSC PA Volunteers Scheduler</div>
+				<h2 style="color: #747981"ng-cloak>{{instruction}}</h2>
 				<div ng-view></div>
 			</section>
 		</div><!-- /container -->

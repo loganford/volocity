@@ -2,45 +2,6 @@
 
 $blue: #0052ec;
 
-html {
-  box-sizing: border-box;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: inherit;
-}
-
-body {
-  padding: 0;
-  margin: 0;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
-.container {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-around;
-}
-
-.item {
-  width: 280px;
-  height: 280px;
-  margin: 20px;
-  background: lighten($blue, 52%);
-  border-radius: 3px;
-  position: relative;
-}
-
-.number {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  color: lighten($blue, 42%);
-  font-size: 30px;
-}
-
 .loader01 {
   @include loader01($align: middle);
 }

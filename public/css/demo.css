@@ -33,20 +33,96 @@ a:hover, a:focus {
 	color: #404d5b;
 }
 
-.container {
+.container-volocity {
 	margin: 0 auto;
 	text-align: center;
 	overflow: hidden;
 }
 
-.content {
+.volocity-button:hover{
+	text-decoration: none;
+	color: #3c3c3c;
+}
+
+.admin-button:hover{
+	text-decoration: none;
+	color: #3c3c3c;
+}
+
+.admin-button{
+	width: 8em !important;
+	height: 2em !important;
+	font-size: 1em !important;
+	padding: 0 !important;
+	float: left !important;
+}
+
+.admin-modal-form{
+	text-align: left;
+}
+
+.admin-modal-label{
+	color: #747981;
+}
+
+.admin-modal-title{
+	color: #118442;
+	font-size: 1.5em;
+}
+
+.content-volocity {
 	font-size: 150%;
 	padding: 3em 0;
+}
+
+.table-header {
+	text-align: left;
+	font-size: 2em;
+}
+
+.table-subheader {
+	text-align: left;
+	color: #747981;
+	font-size: 1em;
+}
+
+.volocity-title {
+	font-size: 3em;
+	margin-bottom: 0.5em;
 }
 
 .content h2 {
 	margin: 0 0 2em;
 	opacity: 0.1;
+}
+
+td {
+	text-align: left;
+	color: #118442;
+}
+
+.white{
+	color: white;
+}
+
+.green {
+	color: #118442;
+}
+
+.red {
+	color: red;
+}
+
+.black{
+	color: black;
+}
+
+.storm {
+	color: #747981;
+}
+
+.vol-link:hover{
+	color: #747981;
 }
 
 .content p {

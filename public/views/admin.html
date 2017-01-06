@@ -1,1 +1,155 @@
-<h1>Admin Page</h1>
+<div class="container">
+    <div ng-show="ac.err != 0" class="red" ng-cloak>
+        <strong>Error!</strong> Something went wrong. Please check your connection and try again.
+    </div>
+    <div class="green" ng-cloak>
+        <strong>{{ac.message.title}}</strong> {{ac.message.detail}}
+    </div>
+    <br>
+    <div class="loader03" ng-show="ac.working"></div>
+    <div class="table-header">Volunteers</div>
+    <div class="table-subheader">
+        Assigned = <i class="cr-icon fa fa-check green"></i>
+        Available = <i class="cr-icon fa fa-check white"></i>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Email</th>
+            <th ng-repeat="td in ac.tableDates">{{td}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="v in ac.org.volunteers">
+            <td type="button" data-toggle="modal" data-target="#removeVolModal" ng-click="ac.volToRemove = v"><i class="cr-icon fa fa-trash-o storm"></i></td>
+            <td><a class = "green vol-link" href="mailto:{{v}}">{{v}}</a></td>
+            <td ng-repeat="e in ac.org.events">
+                <i class="cr-icon fa fa-check green" ng-show="ac.getIcon(v,e)=='A'"></i>
+                <i class="cr-icon fa fa-check white" ng-show="ac.getIcon(v,e)=='Y'"></i>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <button type="button" class="button admin-button" data-toggle="modal" data-target="#newVolModal" ng-click="ac.invalidNewEmail = false;">Add Volunteer</button>
+    <br><br><br>
+    <div class="table-header">Events (Assigned)</div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Volunteer 1</th>
+            <th>Volunteer 2</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="e in ac.org.events" ng-show="e.assignedVols !== undefined;">
+            <td>{{ac.prettyDate(e)}}</td>
+            <td><a class = "green vol-link" href="mailto:{{e.assignedVols[0]}}">{{e.assignedVols[0]}}</a></td>
+            <td><a class = "green vol-link" href="mailto:{{e.assignedVols[1]}}">{{e.assignedVols[1]}}</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <div class="table-header">Events</div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Date</th>
+            <th># of Volunteers</th>
+            <th>Days Remaining</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="e in ac.org.events" ng-show="e.assignedVols === undefined;">
+            <td class="white" type="button" data-toggle="modal" data-target="#removeEventModal" ng-click="ac.eventToRemove = e.date"><i class="cr-icon fa fa-trash-o storm"></i></td>
+            <td class="white">{{ac.prettyDate(e)}}</td>
+            <td class="white">{{e.volsAvailable.length}}</td>
+            <td class="white">{{ac.getCountdown(e)}}</td>
+        </tr>
+        </tbody>
+    </table>
+    <button type="button" class="button admin-button" data-toggle="modal" data-target="#newEventModal">Add Event</button>
+
+    <!-- New Vol Modal -->
+    <div class="modal fade" id="newVolModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button volocity-button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title admin-modal-title">Add a New Volunteer</h4>
+                    <div class="form-group admin-modal-form">
+                        <label for="newVolInput" class="admin-modal-label">Email:</label>
+                        <label class="admin-modal-label red" ng-show="ac.invalidNewEmail">It looks like that e-mail is invalid.</label>
+                        <input type="text" class="form-control" id="newVolInput" ng-model="ac.newVolunteer" autofocus>
+                    </div>
+                    <button type="button" class="btn btn-default" ng-click="ac.addVolunteer()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove Vol Modal -->
+    <div class="modal fade" id="removeVolModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button volocity-button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title admin-modal-title">Remove {{ac.volToRemove}}?</h4>
+                    <label class="admin-modal-label">Are you sure you want to remove {{ac.volToRemove}} from your volunteers?</label>
+                    <button type="button" class="btn btn-default" ng-click="ac.removeVolunteer()">Remove</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="newEventModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button volocity-button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title admin-modal-title">Add a New Event</h4>
+                    <br>
+                    <div class="form-group admin-modal-form">
+                        <label for="newEventInput" class="admin-modal-label">Date:</label>
+                        <label class="admin-modal-label red" ng-show="ac.invalidDate">It looks like that date is invalid.</label>
+                        <input type="date" id="newEventInput" class="storm" ng-model="ac.newEvent" autofocus>
+                    </div>
+                    <button type="button" class="btn btn-default" ng-click="ac.addEvent()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove Vol Modal -->
+    <div class="modal fade" id="removeEventModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button volocity-button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title admin-modal-title">Remove {{ac.eventToRemove}}?</h4>
+                    <label class="admin-modal-label">Are you sure you want to remove {{ac.eventToRemove}} from your events?</label>
+                    <button type="button" class="btn btn-default" ng-click="ac.removeEvent()">Remove</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        $('#newVolModal').on('shown.bs.modal', function () {
+            $('#newVolInput').focus();
+        })
+        $('#newEventModal').on('shown.bs.modal', function () {
+            $('#newEventInput').focus();
+        })
+    </script>
+</div>
