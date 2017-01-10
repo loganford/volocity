@@ -1,6 +1,9 @@
 <div class="container">
-    <div ng-show="ac.err != 0" class="red" ng-cloak>
+    <div ng-show="ac.err == 404" class="red" ng-cloak>
         <strong>Error!</strong> Something went wrong. Please check your connection and try again.
+    </div>
+    <div ng-show="ac.err == 401" class="red" ng-cloak>
+        <strong>Unauthorized!</strong> If you changed your email or password, please refresh the page and log back in.
     </div>
     <div class="green" ng-cloak>
         <strong>{{ac.message.title}}</strong> {{ac.message.detail}}
@@ -34,6 +37,9 @@
     <button type="button" class="button admin-button" data-toggle="modal" data-target="#newVolModal" ng-click="ac.invalidNewEmail = false;">Add Volunteer</button>
     <br><br><br>
     <div class="table-header">Events (Assigned)</div>
+    <div class="table-subheader">
+        These events will be dropped after 60 days.
+    </div>
     <table class="table">
         <thead>
         <tr>
@@ -52,6 +58,11 @@
     </table>
     <br>
     <div class="table-header">Events</div>
+    <div class="table-subheader">
+        Volunteers will be assigned to events 7 days before the date.
+        If there are not at least two volunteers signed up 7 days before the date, the program will check every night before the
+        event to see if more volunteers have signed up.
+    </div>
     <table class="table">
         <thead>
         <tr>
@@ -71,6 +82,22 @@
         </tbody>
     </table>
     <button type="button" class="button admin-button" data-toggle="modal" data-target="#newEventModal">Add Event</button>
+    <br><br><br>
+    <div class="table-header">Preferences</div>
+    <div class="admin-checkbox-column" ng-cloak>
+        <div class="checkbox">
+            <label style="font-size: 1.2em">
+                <input type="checkbox" ng-model="ac.preferences.autoEmail" ng-change="ac.updatePreference()"><span class="cr green"><i class="cr-icon fa fa-check"></i></span>
+                Automatically e-mail volunteers after being assigned
+            </label>
+        </div>
+    </div>
+    <div class="table-header">Settings</div>
+    <button type="button" class="button admin-button" data-toggle="modal" data-target="#adminEmailModal">Change Admin Email</button>
+    <button type="button" class="button admin-button" data-toggle="modal" data-target="#adminPasswordModal">Change Admin Password</button>
+    <button type="button" class="button admin-button" data-toggle="modal" data-target="#volPasswordModal">Change Volunteer Password</button>
+    <br><br><br>
+
 
     <!-- New Vol Modal -->
     <div class="modal fade" id="newVolModal" role="dialog">
@@ -109,6 +136,7 @@
         </div>
     </div>
 
+    <!--New Event Modal -->
     <div class="modal fade" id="newEventModal" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -128,7 +156,7 @@
         </div>
     </div>
 
-    <!-- Remove Vol Modal -->
+    <!-- Remove Event Modal -->
     <div class="modal fade" id="removeEventModal" role="dialog">
         <div class="modal-dialog">
 
@@ -144,12 +172,94 @@
 
         </div>
     </div>
+
+    <!-- Admin Email Modal -->
+    <div class="modal fade" id="adminEmailModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button volocity-button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title admin-modal-title">Change Admin Email</h4>
+                    <br>
+                    <div class="form-group admin-modal-form">
+                        <label for="adminEmailInput" class="admin-modal-label">New Admin Email:</label>
+                        <label class="admin-modal-label red" ng-show="ac.invalidEmail">It looks like that e-mail is invalid.</label>
+                        <input type="text" class="form-control" id="adminEmailInput" ng-model="ac.newAdminEmail" autofocus>
+                    </div>
+                    <button type="button" class="btn btn-default" ng-click="ac.changeAdminEmail()">Update</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Admin Password Modal -->
+    <div class="modal fade" id="adminPasswordModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button volocity-button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title admin-modal-title">Change Admin Email</h4>
+                    <br>
+                    <div class="form-group admin-modal-form">
+                        <label for="adminPasswordInput" class="admin-modal-label">New Admin Password:</label>
+                        <label class="admin-modal-label red" ng-show="ac.invalidPassword">It looks like that password is invalid.</label>
+                        <label class="admin-modal-label red" ng-show="ac.invalidConfirmPassword">It looks like your passwords do not match.</label>
+                        <input type="password" class="form-control" id="adminPasswordInput" ng-model="ac.newAdminPassword" autofocus>
+                        <br>
+                        <label for="adminConfirmPasswordInput" class="admin-modal-label">Confirm New Password:</label>
+                        <input type="password" class="form-control" id="adminConfirmPasswordInput" ng-model="ac.confirmNewAdminPassword" autofocus>
+                    </div>
+                    <button type="button" class="btn btn-default" ng-click="ac.changeAdminPassword()">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Volunteer Password Modal -->
+    <div class="modal fade" id="volPasswordModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button volocity-button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title admin-modal-title">Change Admin Email</h4>
+                    <br>
+                    <div class="form-group admin-modal-form">
+                        <label for="volPasswordInput" class="admin-modal-label">New Volunteer Password (the password all volunteers will use to log in):</label>
+                        <label class="admin-modal-label red" ng-show="ac.invalidPassword">It looks like that password is invalid.</label>
+                        <label class="admin-modal-label red" ng-show="ac.invalidConfirmPassword">It looks like your passwords do not match.</label>
+                        <input type="password" class="form-control" id="volPasswordInput" ng-model="ac.newVolPassword" autofocus>
+                        <br>
+                        <label for="volConfirmPasswordInput" class="admin-modal-label">Confirm New Password:</label>
+                        <input type="password" class="form-control" id="volConfirmPasswordInput" ng-model="ac.confirmNewVolPassword" autofocus>
+                    </div>
+                    <button type="button" class="btn btn-default" ng-click="ac.changeVolPassword()">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         $('#newVolModal').on('shown.bs.modal', function () {
             $('#newVolInput').focus();
         })
         $('#newEventModal').on('shown.bs.modal', function () {
             $('#newEventInput').focus();
+        })
+        $('#adminEmailModal').on('shown.bs.modal', function () {
+            $('#adminEmailInput').focus();
+        })
+        $('#adminPasswordModal').on('shown.bs.modal', function () {
+            $('#adminPasswordInput').focus();
+        })
+        $('#volPasswordModal').on('shown.bs.modal', function () {
+            $('#volPasswordInput').focus();
         })
     </script>
 </div>
