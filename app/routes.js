@@ -41,10 +41,10 @@ module.exports = function(app) {
                                 Volunteer.find({email: req.params.email}, function(err, vol){
                                     if (err) { res.send(err); }
                                     else if (vol[0] === undefined) {
-                                        res.sendStatus(404);
+                                        res.sendStatus(200); // Admin is not a volunteer
                                     } else {
                                         response.vol = vol[0];
-                                        res.send(response);
+                                        res.send(response); 
                                     }
                                 });
                             } else {

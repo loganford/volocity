@@ -1,5 +1,5 @@
-var Volunteer = require('./models/volunteer');
-var Organization = require('./models/organization');
+var Volunteer = require('./app/models/volunteer');
+var Organization = require('./app/models/organization');
 var nodemailer = require('nodemailer');
 var mongodb = require('mongodb');
 var mongoose = require('mongoose');
@@ -138,6 +138,7 @@ function selectCandidates(candidates, event, org) {
             console.log(error);
         }else{
             console.log('Message sent: ' + info.response);
+            process.exit();
         };
     });
 }
