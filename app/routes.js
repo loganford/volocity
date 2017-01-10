@@ -41,7 +41,7 @@ module.exports = function(app) {
                                 Volunteer.find({email: req.params.email}, function(err, vol){
                                     if (err) { res.send(err); }
                                     else if (vol[0] === undefined) {
-                                        res.status(404);
+                                        res.sendStatus(404);
                                     } else {
                                         response.vol = vol[0];
                                         res.send(response);
@@ -62,14 +62,14 @@ module.exports = function(app) {
                                 Volunteer.find({email: req.params.email}, function(err, vol){
                                     if (err) { res.send(err); }
                                     else if (vol[0] === undefined) {
-                                        res.status(404);
+                                        res.sendStatus(404);
                                     } else {
                                         response.vol = vol[0];
                                         res.send(response);
                                     }
                                 });
                             } else {
-                                res.status(401);
+                                res.sendStatus(401);
                             }
                         }
                     });
@@ -252,6 +252,95 @@ module.exports = function(app) {
                                     res.send(org);
                                 }
                             })
+                        }
+                    });
+                } else {
+                    res.sendStatus(401);
+                }
+            }
+        })
+    });
+
+    // ADMIN - Change Admin Email
+    app.put('/admin/email/:password', function(req, res) {
+        var newAdminEmail = req.body.newAdminEmail;
+        var orgName = req.body.orgName;
+        Auth.find({organization: orgName, role: 'Admin'}, function (err, auth) {
+            if (err) {
+                res.send(err);
+            }
+            else {
+                hash = auth[0].password.hash;
+                salt = auth[0].password.salt;
+                // Check Admin Credentials
+                if (sha3_256(salt + req.params.password) == hash) {
+                    Organization.update({name: orgName}, {admin: newAdminEmail}, function (err) {
+                        if (err) { res.send(err); }
+                        else {
+                            res.sendStatus(200);
+                        }
+                    });
+                } else {
+                    res.sendStatus(401);
+                }
+            }
+        })
+    });
+
+    // ADMIN - Change Admin or Volunteer Password
+    app.put('/admin/password/:password', function(req, res) {
+        var newPassword = req.body.newPassword;
+        var roleToChange = req.body.roleToChange;
+        var orgName = req.body.orgName;
+        Auth.find({organization: orgName, role: 'Admin'}, function (err, auth) {
+            if (err) {
+                res.send(err);
+            }
+            else {
+                hash = auth[0].password.hash;
+                salt = auth[0].password.salt;
+                // Check Admin Credentials
+                if (sha3_256(salt + req.params.password) == hash) {
+                    var newSaltAndHash = {};
+                    newSaltAndHash.salt = csprng(64,36);
+                    newSaltAndHash.hash = sha3_256(newSaltAndHash.salt + newPassword);
+                    Auth.update({organization: orgName, role: roleToChange}, {password: newSaltAndHash}, function (err) {
+                        if (err) { res.send(err); }
+                        else {
+                            res.sendStatus(200);
+                        }
+                    });
+                } else {
+                    res.sendStatus(401);
+                }
+            }
+        })
+    });
+
+    // ADMIN - Change Preferences
+    app.put('/admin/pref/:password', function(req, res) {
+        var pref = req.body.pref;
+        var value = req.body.value;
+        var orgName = req.body.orgName;
+        Auth.find({organization: orgName, role: 'Admin'}, function (err, auth) {
+            if (err) {
+                res.send(err);
+            }
+            else {
+                hash = auth[0].password.hash;
+                salt = auth[0].password.salt;
+                // Check Admin Credentials
+                if (sha3_256(salt + req.params.password) == hash) {
+                    Organization.find({name: orgName}, function(err, org){
+                        if (err) { res.send(err); }
+                        else {
+                            _.update(org[0], 'preferences.' + pref, function(p) { return value;});
+                            Organization.update({name: orgName}, {preferences: org[0].preferences}, function (err) {
+                                if (err) { res.send(err); }
+                                else {
+                                    res.sendStatus(200);
+                                }
+                            });
                         }
                     });
                 } else {
