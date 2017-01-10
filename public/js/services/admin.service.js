@@ -55,6 +55,50 @@ angular.module('AdminService', []).factory('adminService', ['$http', function($h
                     event: event
                 }
             });
+        },
+
+        updateAdminEmail : function(password, orgName, newAdminEmail) {
+            return $http({
+                method: 'PUT',
+                url: '/admin/email/' + password,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    orgName: orgName,
+                    newAdminEmail: newAdminEmail
+                }
+            });
+        },
+
+        updatePassword: function(password, orgName, newPassword, roleToChange) {
+            return $http({
+                method: 'PUT',
+                url: '/admin/password/' + password,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    orgName: orgName,
+                    newPassword: newPassword,
+                    roleToChange: roleToChange
+                }
+            });
+        },
+
+        updatePreference: function(password, orgName, preference, value){
+            return $http({
+                method: 'PUT',
+                url: '/admin/pref/' + password,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    orgName: orgName,
+                    pref: preference,
+                    value: value
+                }
+            });
         }
     }
 
