@@ -50,11 +50,15 @@ a:hover, a:focus {
 }
 
 .admin-button{
-	width: 8em !important;
-	height: 2em !important;
+	min-width: 8em !important;
+	min-height: 2em !important;
 	font-size: 1em !important;
-	padding: 0 !important;
+	padding: 0.5em !important;
 	float: left !important;
+}
+
+.admin-checkbox-column{
+	display: block;
 }
 
 .admin-modal-form{
