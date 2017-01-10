@@ -1,9 +1,17 @@
+var Volunteer = require('./models/volunteer');
+var Organization = require('./models/organization');
 var nodemailer = require('nodemailer');
 var mongodb = require('mongodb');
 var mongoose = require('mongoose');
 var _ = require('lodash');
 var moment = require('moment');
+// Config DB
+var db = require('./config/db');
 
+// DB Connection
+mongoose.connect(db.url);
+
+// Set up transport
 var transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
@@ -11,29 +19,6 @@ var transporter = nodemailer.createTransport({
         pass: '3hZa7LNRufdZ9Qy'
     }
 });
-
-//DB Connection
-mongoose.connect('mongodb://heroku_f913h3ph:e91uvbodmgahapl69rmthff1pg@ds119788.mlab.com:19788/heroku_f913h3ph');
-
-//DB Schema - Volunteer
-var volunteerSchema = new mongoose.Schema({
-    email: String,
-    organization: String,
-    cooldown: Number,
-    datesAvailable: [String]
-});
-
-//DB Schema - Organization
-var organizationSchema = new mongoose.Schema({
-    name: String,
-    admin: String,
-    events: Array,
-    volunteers: [String]
-});
-
-// Create a model based on the schema
-var Volunteer = mongoose.model('Volunteer', volunteerSchema);
-var Organization = mongoose.model('Organization', organizationSchema);
 
 Organization.find({name: 'UNTHSCPA'}, function(err, org){
     if (err) {console.log(err); }
@@ -118,7 +103,7 @@ function selectCandidates(candidates, event, org) {
 
     var subject = 'Volunteer Assignment for ' + moment(event.date).format('MMMM D');
     var msg =
-        'Hi! The volunteers for ' + moment(event.date).format('MMMM D') + ' have been selected and e-mailed. Their e-mail addresses are ' +
+        'Hi! The volunteers for ' + moment(event.date).format('MMMM D') + ' have been selected and e-mailed. \nTheir e-mail addresses are ' +
         vol1.email + ' and ' + vol2.email +'.';
     var mailOptions = {
         from: 'volocity.scheduler@gmail.com', // sender address
@@ -137,11 +122,12 @@ function selectCandidates(candidates, event, org) {
     });
 
     var msg =
-        'Hi! You\'ve been selected to volunteer for the UNTHSC on ' + moment(event.date).format('MMMM D') +
-            '. Please mark the date in your calendar. Send an email to ' + org.admin + ' if you have any questions. Thanks! ';
+        'Hi! \n\nYou\'ve been selected to volunteer for the UNTHSC on ' + moment(event.date).format('MMMM D') +
+            '. Please mark the date in your calendar. Send an email to ' + org.admin + ' if you have any questions. \n\nThanks! ';
     var mailOptions = {
         from: 'volocity.scheduler@gmail.com', // sender address
-        to: ['loganford17@gmail.com', 'loganford7@yahoo.com'], // vol1.email, vol2.email
+        // to: [vol1.email, vol2.email],
+        to: ['loganford17@gmail.com'],
         subject: subject, // Subject line
         text: msg //, // plaintext body
         //html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
@@ -162,8 +148,8 @@ function alertAdmin(candidates, event, admin) {
         from: 'volocity.scheduler@gmail.com', // sender address
         to: admin, // list of receivers
         subject: 'Insufficient Volunteers for ' + formattedDate, // Subject line
-        text: 'Hi! This is a notice to inform you that less than 2 volunteers have signed up to be scheduled for' + formattedDate +
-            '. The database will be checked every 24 hours to check if others have signed up. Thank you!'
+        text: 'Hi! \n\nThis is a notice to inform you that less than 2 volunteers have signed up to be scheduled for' + formattedDate +
+            '. The database will be checked every 24 hours to check if others have signed up. \n\nThank you!'
         //html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
     };
 
