@@ -27,7 +27,7 @@ Organization.find({name: 'UNTHSCPA'}, function(err, org){
         var now = moment();
         var working = false;
         _.forEach(events, function(event) {
-            if ((moment(event.date).diff(now, 'days') < 8 && moment(event.date).diff(now, 'days') > 0 &&
+            if ((moment(event.date).diff(now, 'days') < 10 && moment(event.date).diff(now, 'days') > 0 &&
                 event.assignedVols === undefined)) {
                 working = true;
                 var candidates = [];
