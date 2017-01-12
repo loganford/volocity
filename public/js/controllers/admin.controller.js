@@ -150,7 +150,7 @@ function adminController(moment, _, adminService, $scope, $location, $anchorScro
 
     ac.updatePreference = function(){
         prepareForRequest();
-        adminService.updatePreference(ac.password, ac.org.name, 'autoEmail', ac.autoEmail).then(function(resp){
+        adminService.updatePreference(ac.password, ac.org.name, 'autoEmail', ac.preferences.autoEmail).then(function(resp){
             handleResp(resp);
             ac.message.detail = 'Your preferences have been updated.';
         }, function(err){
