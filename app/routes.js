@@ -176,7 +176,7 @@ module.exports = function(app) {
                                        if (_.includes(e.volsAvailable, volToRemove)) {
                                            _.remove(e.volsAvailable, volToRemove);
                                        }
-                                       newEvents.append(e);
+                                       newEvents.push(e);
                                     });
                                     // Update Organization
                                     Organization.update({name: orgName}, {volunteers: org[0].volunteers, events: newEvents}, function(err){
