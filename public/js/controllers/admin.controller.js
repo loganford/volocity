@@ -15,7 +15,7 @@ function adminController(moment, _, adminService, $scope, $location, $anchorScro
     ac.vol = $scope.$parent.vol;
     ac.err = 0;
     ac.tableDates = [];
-    ac.message = {}
+    ac.message = {};
     _.forEach(ac.org.events, function(e){
        ac.tableDates.push(moment(e.date).format('M/D'));
     });
@@ -28,7 +28,7 @@ function adminController(moment, _, adminService, $scope, $location, $anchorScro
             return 'Y';
         }
         return '';
-    }
+    };
 
     ac.addVolunteer = function(){
         if(validEmail(ac.newVolunteer)) {
@@ -46,11 +46,11 @@ function adminController(moment, _, adminService, $scope, $location, $anchorScro
         } else {
             ac.invalidNewEmail = true;
         }
-    }
+    };
 
     ac.removeVolunteer = function() {
         $('#removeVolModal').modal('hide');
-        prepareForRequest()
+        prepareForRequest();
         adminService.removeVolunteer(ac.password, ac.org.name, ac.volToRemove).then(function (resp){
             ac.message.detail = 'Removed ' + ac.volToRemove + ' from ' + ac.org.name + '.';
             ac.org = resp.data[0];
@@ -58,7 +58,7 @@ function adminController(moment, _, adminService, $scope, $location, $anchorScro
         }, function (err){
             handleErr(err);
         });
-    }
+    };
 
     ac.addEvent = function(){
         if(moment(ac.newEvent).isValid()) {
@@ -75,7 +75,7 @@ function adminController(moment, _, adminService, $scope, $location, $anchorScro
         } else {
             ac.invalidDate = true;
         }
-    }
+    };
 
     ac.removeEvent = function() {
         $('#removeEventModal').modal('hide');
@@ -88,7 +88,7 @@ function adminController(moment, _, adminService, $scope, $location, $anchorScro
         }, function (err){
             handleErr(err);
         });
-    }
+    };
 
     ac.changeAdminEmail = function(){
         if (validEmail(ac.newAdminEmail)) {
@@ -104,7 +104,7 @@ function adminController(moment, _, adminService, $scope, $location, $anchorScro
         } else {
             ac.invalidEmail = true;
         }
-    }
+    };
 
     ac.changeAdminPassword = function(){
         ac.invalidPassword = false;
@@ -112,7 +112,7 @@ function adminController(moment, _, adminService, $scope, $location, $anchorScro
         if (ac.newAdminPassword != '' && ac.newAdminPassword != ac.password) {
             if (ac.newAdminPassword == ac.confirmNewAdminPassword) {
                 $('#adminPasswordModal').modal('hide');
-                prepareForRequest()
+                prepareForRequest();
                 adminService.updatePassword(ac.password, ac.org.name, ac.newAdminPassword, 'Admin').then(function (resp) {
                     ac.message.detail = 'The admin password has been successfully updated.';
                     handleResp(resp);
@@ -125,7 +125,7 @@ function adminController(moment, _, adminService, $scope, $location, $anchorScro
         } else {
             ac.invalidPassword = true;
         }
-    }
+    };
 
     ac.changeVolPassword = function(){
         ac.invalidPassword = false;
@@ -133,7 +133,7 @@ function adminController(moment, _, adminService, $scope, $location, $anchorScro
         if (ac.newVolPassword != '') {
             if (ac.newVolPassword == ac.confirmNewVolPassword) {
                 $('#volPasswordModal').modal('hide');
-                prepareForRequest()
+                prepareForRequest();
                 adminService.updatePassword(ac.password, ac.org.name, ac.newVolPassword, 'Volunteer').then(function (resp) {
                     ac.message.detail = 'The volunteer password has been successfully updated.';
                     handleResp(resp);
@@ -146,7 +146,7 @@ function adminController(moment, _, adminService, $scope, $location, $anchorScro
         } else {
             ac.invalidPassword = true;
         }
-    }
+    };
 
     ac.updatePreference = function(){
         prepareForRequest();
@@ -156,16 +156,16 @@ function adminController(moment, _, adminService, $scope, $location, $anchorScro
         }, function(err){
            handleErr(err);
         });
-    }
+    };
 
     // Helper Methods
     ac.prettyDate = function(e) {
         return moment(e.date).format('MMMM D, YYYY');
-    }
+    };
 
     ac.getCountdown = function(e) {
         return moment(e.date).diff(moment(), 'days');
-    }
+    };
 
     function prepareForRequest() {
         ac.working = true;
