@@ -1,14 +1,13 @@
-var Volunteer = require('./app/models/volunteer');
-var Organization = require('./app/models/organization');
+var Volunteer = require('../app/models/volunteer');
+var Organization = require('../app/models/organization');
 var nodemailer = require('nodemailer');
 var mongodb = require('mongodb');
 var mongoose = require('mongoose');
 var _ = require('lodash');
 var moment = require('moment');
 // Config DB
-var db = require('./config/db');
-var constants = require('./config/constants');
-
+var db = require('../config/db');
+var constants = require('../config/constants');
 // DB Connection
 mongoose.connect(db.url);
 
@@ -88,8 +87,6 @@ Organization.find({name: 'UNTHSCPA'}, function(err, org){
         }
     }
 });
-
-selectCandidates(candidates, event, org);
 
 function selectCandidates(candidates, event, org) {
 

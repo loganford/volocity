@@ -8,7 +8,6 @@ var moment = require('moment');
 // Config DB
 var db = require('../config/db');
 var constants = require('../config/constants');
-
 // DB Connection
 mongoose.connect(db.url);
 
@@ -88,8 +87,6 @@ Organization.find({name: 'UNTHSCPA'}, function(err, org){
         }
     }
 });
-
-selectCandidates(candidates, event, org);
 
 function selectCandidates(candidates, event, org) {
 
@@ -217,4 +214,5 @@ function alertAdmin(candidates, event, admin) {
         };
         process.exit();
     });
+
 }
