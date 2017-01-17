@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var Volunteer = require('../app/models/volunteer');
 var Organization = require('../app/models/organization');
 var nodemailer = require('nodemailer');
