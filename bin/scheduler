@@ -18,7 +18,7 @@ var transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
         user: 'volocity.scheduler@gmail.com',
-        pass: '3hZa7LNRufdZ9Qy'
+        pass: 'RbXG6nDjrTqaqp7B'
     }
 });
 
