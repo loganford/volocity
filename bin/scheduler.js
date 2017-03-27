@@ -26,7 +26,7 @@ Organization.find({name: 'UNTHSCPA'}, function(err, org){
         var events = org[0].events;
         var now = moment();
         var working = false;
-        var requiredNumOfCandidates = constants.numOfVolunteersToBeSelected + constants.numOfBackupsToBeSelected;
+        var requiredNumOfCandidates = constants.numOfVolunteersToBeSelected;
         _.forEach(events, function(event) {
             if ((moment(event.date).diff(now, 'days') < 10 && moment(event.date).diff(now, 'days') > 0 &&
                 event.assignedVols === undefined)) {
@@ -100,9 +100,13 @@ function selectCandidates(candidates, event, org) {
     });
 
     _.forEach(_.range(0, constants.numOfBackupsToBeSelected), function () {
-        var backup = candidates[Math.floor(Math.random() * candidates.length)];
-        _.remove(candidates, function(c) { return c.email == backup.email });
-        backups.push(backup);
+        if (candidates.length >= 1) {
+            var backup = candidates[Math.floor(Math.random() * candidates.length)];
+            _.remove(candidates, function (c) {
+                return c.email == backup.email
+            });
+            backups.push(backup);
+        }
     });
 
     _.forEach(assignedVolunteers, function(v){
@@ -167,6 +171,14 @@ function selectCandidates(candidates, event, org) {
     }
 
     // E-mail admin and candidates
+    var backupMessage;
+    if(backups.length > 1){
+        backupMessage = 'The backup volunteers are: \n\n' +
+        backupEmails + '\n\n' +
+        'Have a great day!';
+    } else {
+        backupMessage = 'No other volunteers were available to be backups for this date.' + '\n\n'
+    }
 
 
     var adminMsg =
@@ -174,8 +186,7 @@ function selectCandidates(candidates, event, org) {
         'Their e-mail addresses are listed below: \n\n' +
         assignedEmails + '\n' +
         autoEmailMessage +
-        'The backup volunteers are: \n\n' +
-        backupEmails + '\n\n' +
+        backupMessage +
         'Have a great day!';
     var adminMailOptions = {
         from: 'volocity.scheduler@gmail.com', // sender address
