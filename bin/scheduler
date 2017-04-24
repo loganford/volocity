@@ -173,11 +173,11 @@ function selectCandidates(candidates, event, org) {
     }
 
     // E-mail admin and candidates
-    var backupMessage
+    var backupMessage;
     if(backups.length > 1){
         backupMessage = 'The backup volunteers are: \n\n' +
-            backupEmails + '\n\n' +
-            'Have a great day!';
+        backupEmails + '\n\n' +
+        'Have a great day!';
     } else {
         backupMessage = 'No other volunteers were available to be backups for this date.' + '\n\n'
     }
